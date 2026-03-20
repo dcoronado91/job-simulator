@@ -1,171 +1,203 @@
-# Job Simulator — REST CRUD API
+# Job Simulator — REST API · Nivel 3 (Senior)
+
+**Autor:** Derek Friedhelm Coronado Chilin
+**Carnet:** 24732
+**Nivel:** 3 — Senior (máximo 100/100)
+**Recurso:** Players (Jugadores de Basquetbol)
+
+---
 
 ## Descripción
 
-Se requiere construir una API REST con operaciones CRUD completas, persistencia en base de datos relacional y entorno containerizado. El dominio del recurso queda a criterio del desarrollador.
-
-El sistema será consumido por un cliente frontend ya existente. La API debe cumplir el contrato definido en este documento de forma exacta. Cualquier desviación del contrato se considera un fallo de integración.
-
----
-
-## Condiciones de trabajo
-
-Eres un desarrollador backend contratado para entregar un sistema funcional en un tiempo determinado. El pago se acredita únicamente si el sistema es entregado en tiempo y cumple el contrato en su totalidad.
-
-Las siguientes condiciones resultan en terminación del contrato sin compensación parcial:
-
-- El repositorio contiene archivos que no deben ser versionados (`node_modules`, `vendor`, `.env`, binarios, archivos de sistema operativo)
-
-- Entrega fuera del plazo establecido
-- El sistema no levanta con un único comando
-- Algún endpoint no responde o responde de forma incorrecta
-- Los códigos de respuesta HTTP no son los correctos según el estándar REST
-- Las validaciones no están implementadas
-- Los tipos de datos no son respetados
-- Las respuestas no son JSON
-- Almacenamiento en memoria en lugar de base de datos relacional
-- El API no interactua de forma correcta con el frontend.
-
-El nivel de contratación determina el máximo de compensación posible. No existe compensación parcial dentro de un nivel.
-
----
-
-## Contrato de la API
-
-### Estructura del recurso
-
-El recurso expone los siguientes campos con nombres fijos:
-
-| Campo  | Tipo    | Restricciones              |
-| ------ | ------- | -------------------------- |
-| id     | integer | primary key, autoincrement |
-| campo1 | string  | requerido                  |
-| campo2 | string  | requerido                  |
-| campo3 | string  | requerido                  |
-| campo4 | integer | requerido                  |
-| campo5 | float   | requerido                  |
-| campo6 | boolean | requerido                  |
-
-El dominio es libre. Los nombres internos en base de datos y lógica de negocio quedan a criterio del desarrollador.
-
----
-
-### Endpoints
-
-Se requiere implementar los métodos `GET`, `POST`, `PUT` y `DELETE`. El nombre del recurso en la ruta debe seguir las convenciones REST estándar.
-
----
-
-### Validaciones
-
-Todos los campos son requeridos. Los tipos deben ser respetados estrictamente: `campo4` es entero, `campo5` es decimal, `campo6` es booleano.
-
----
-
-### Códigos de respuesta
-
-El uso correcto de códigos HTTP es parte del contrato con el cliente. Todas las respuestas son JSON.
+API REST con operaciones CRUD completas sobre el recurso `players`, construida con Node.js y Express, persistencia en PostgreSQL y entorno completamente containerizado con Docker.
 
 ---
 
 ## Stack
 
-- Lenguaje: Javascript, PHP o Rust — no se aceptan Go ni Python
-- Base de datos: relacional, sin almacenamiento en memoria
-- Containerización: Docker obligatorio
-
-En la carpeta `resources/` se incluyen Dockerfiles de referencia para cada lenguaje y base de datos, y un `.env.example`.
-
----
-
-## Niveles de contratación
-
-La evaluación es **pasa o no pasa**. Indicar el nivel seleccionado al momento de la entrega.
+| Capa | Tecnología |
+|------|-----------|
+| Runtime | Node.js 20 |
+| Framework | Express |
+| Base de datos | PostgreSQL 16 |
+| Containerización | Docker + Docker Compose |
 
 ---
 
-### Nivel 1 — Junior `(máximo 70/100)`
+## Estructura del proyecto
 
-**Base de datos:** SQLite
-
-**Infraestructura:** `docker-compose.yml` con un único servicio. La base de datos corre embebida dentro del mismo contenedor que la aplicación. `docker-compose up` debe levantar el sistema completo y funcional sin intervención manual.
-
-**Requisitos:**
-- Los cinco endpoints funcionan correctamente contra la base de datos
-- Todas las validaciones están implementadas y retornan los códigos HTTP correspondientes
-- La base de datos persiste los datos correctamente entre operaciones
-- `Dockerfile` y `docker-compose.yml` presentes y funcionales
-
----
-
-### Nivel 2 — Mid `(máximo 85/100)`
-
-**Base de datos:** PostgreSQL
-
-**Infraestructura:** `docker-compose.yml` con dos servicios independientes: aplicación y base de datos. La aplicación debe conectarse a PostgreSQL usando variables de entorno. Un único `docker-compose up` levanta el sistema completo y funcional.
-
-**Requisitos adicionales al Nivel 1:**
-- Archivo `.env` con todas las variables de configuración necesarias
-- Sin credenciales, puertos ni strings de conexión hardcodeados en el código
-- La aplicación maneja correctamente los errores de conexión a la base de datos
-- El servicio de la aplicación no inicia hasta que PostgreSQL esté disponible
-
----
-
-### Nivel 3 — Senior `(máximo 100/100)`
-
-**Base de datos:** PostgreSQL
-
-**Infraestructura:** igual que Nivel 2.
-
-**Requisitos adicionales al Nivel 2:**
-- Endpoint `PATCH` para actualizaciones parciales: solo se modifican los campos presentes en el body, el resto permanece sin cambios
-- `.env.example` en el repositorio con todas las variables necesarias documentadas, sin valores reales
-- `.gitignore` que excluya `node_modules`, `.env`, y archivos de sistema operativo
-- Script SQL de inicialización de esquema ejecutado automáticamente por Docker al primer arranque
-- Estructura de proyecto con separación clara de responsabilidades: configuración de base de datos, definición de rutas y punto de entrada en archivos distintos
-- Historial de commits que refleje un proceso de desarrollo incremental — no se acepta un único commit con todo el trabajo
-
----
-
-## Bonus
-
-Los puntos bonus se suman sobre la nota del nivel entregado. Cada bonus se evalúa de forma independiente.
-
-### Integración full stack `(+10 puntos)`
-
-Integrar el frontend provisto en el mismo `docker-compose.yml` que la API.
-
-Condiciones:
-- Un único `docker-compose.yml` levanta ambos servicios
-- El frontend consume la API sin configuración manual posterior al `docker-compose up`
-- Ambos servicios operativos con un solo comando
-
-### Personalización del frontend `(+5 puntos)`
-
-Adaptar el frontend para que refleje el dominio elegido: etiquetas en el idioma correcto, nombres de campos legibles, y cualquier ajuste visual que mejore la experiencia del usuario final.
-
-Condiciones:
-- El frontend no debe mostrar `campo1`, `campo2`, etc. — deben verse los nombres reales del dominio
-- Los cambios deben ser coherentes con el recurso implementado en la API
-- Aplica únicamente si el bonus de integración también fue completado
-
----
-
-## Configuración del frontend
-
-El frontend provisto requiere dos valores en `public/js/config.js`:
-
-```js
-window.API_URL = "http://localhost:8080"; // URL base de tu API
-window.RESOURCE = "products";             // Nombre del recurso en tu API
+```
+backend/
+├── src/
+│   ├── index.js          # Punto de entrada — configura Express y monta rutas
+│   ├── db.js             # Configuración del pool de conexiones a PostgreSQL
+│   └── routes/
+│       └── players.js    # Definición de todos los endpoints REST
+├── init.sql              # Script DDL ejecutado automáticamente por Docker
+├── Dockerfile            # Imagen de la aplicación
+├── docker-compose.yml    # Orquestación de servicios (backend + db)
+├── .env.example          # Variables de entorno documentadas (sin valores reales)
+└── .gitignore            # Excluye node_modules, .env y archivos de SO
 ```
 
-`RESOURCE` debe coincidir exactamente con el nombre que usaste en las rutas de tu API.
+---
+
+## Levantar el sistema
+
+### Requisitos
+
+- Docker Desktop instalado y corriendo
+
+### Pasos
+
+```bash
+# 1. Clonar el repositorio
+git clone https://github.com/dcoronado91/job-simulator.git
+cd job-simulator/backend
+
+# 2. Crear el archivo de variables de entorno
+cp .env.example .env
+# Editar .env con los valores reales
+
+# 3. Levantar el sistema completo
+docker compose up --build
+```
+
+La API queda disponible en `http://localhost:8080`.
+PostgreSQL se inicializa automáticamente con el esquema definido en `init.sql`.
 
 ---
 
-## Entrega
+## Variables de entorno
 
-- Repositorio en GitHub con visibilidad pública
-- El sistema levanta con un único comando
+| Variable | Descripción | Ejemplo |
+|----------|-------------|---------|
+| `DB_HOST` | Hostname de PostgreSQL (en Docker: nombre del servicio) | `db` |
+| `DB_PORT` | Puerto de PostgreSQL | `5432` |
+| `DB_NAME` | Nombre de la base de datos | `basketball_db` |
+| `DB_USER` | Usuario de la base de datos | `postgres` |
+| `DB_PASSWORD` | Contraseña de la base de datos | `postgres123` |
+| `APP_PORT` | Puerto en que escucha Node.js | `3000` |
+
+---
+
+## Estructura del recurso
+
+| Campo | Tipo | Restricciones |
+|-------|------|---------------|
+| `id` | integer | primary key, autoincrement |
+| `campo1` | string | requerido |
+| `campo2` | string | requerido |
+| `campo3` | string | requerido |
+| `campo4` | integer | requerido |
+| `campo5` | float | requerido |
+| `campo6` | boolean | requerido |
+
+---
+
+## Endpoints
+
+### GET /players
+Retorna todos los jugadores.
+
+**Response 200:**
+```json
+[
+  {
+    "id": 1,
+    "campo1": "LeBron James",
+    "campo2": "Lakers",
+    "campo3": "Forward",
+    "campo4": 23,
+    "campo5": 27.5,
+    "campo6": true
+  }
+]
+```
+
+---
+
+### GET /players/:id
+Retorna un jugador por ID.
+
+**Response 200:** objeto del jugador
+**Response 404:** `{ "error": "Player not found" }`
+
+---
+
+### POST /players
+Crea un nuevo jugador. Todos los campos son requeridos.
+
+**Body:**
+```json
+{
+  "campo1": "Stephen Curry",
+  "campo2": "Warriors",
+  "campo3": "Point Guard",
+  "campo4": 30,
+  "campo5": 29.4,
+  "campo6": true
+}
+```
+
+**Response 201:** objeto creado
+**Response 400:** `{ "error": "All fields are required" }`
+
+---
+
+### PUT /players/:id
+Actualización completa del jugador. Todos los campos son requeridos.
+
+**Response 200:** objeto actualizado
+**Response 404:** `{ "error": "Player not found" }`
+
+---
+
+### PATCH /players/:id
+Actualización parcial. Solo se modifican los campos presentes en el body.
+
+**Body (ejemplo — solo actualiza campo2 y campo5):**
+```json
+{
+  "campo2": "Nuggets",
+  "campo5": 31.2
+}
+```
+
+**Response 200:** objeto actualizado
+**Response 400:** `{ "error": "No valid fields provided" }`
+**Response 404:** `{ "error": "Player not found" }`
+
+---
+
+### DELETE /players/:id
+Elimina un jugador por ID.
+
+**Response 200:** `{ "message": "Player deleted", "player": { ... } }`
+**Response 404:** `{ "error": "Player not found" }`
+
+---
+
+## Códigos HTTP
+
+| Código | Uso |
+|--------|-----|
+| 200 | Operación exitosa |
+| 201 | Recurso creado |
+| 400 | Validación fallida |
+| 404 | Recurso no encontrado |
+| 500 | Error interno del servidor |
+
+---
+
+## Historial de commits
+
+El desarrollo fue realizado de forma incremental:
+
+1. `chore: initialize Node.js backend project structure`
+2. `feat: add database connection and DDL schema`
+3. `feat: add Express server entry point w/ CORS`
+4. `feat: add GET and POST routes for players resource`
+5. `feat: add PUT, PATCH and DELETE routes for players resource`
+6. `feat: add Docker Compose configuration for backend and database`
+7. `chore: add .gitignore for backend`
